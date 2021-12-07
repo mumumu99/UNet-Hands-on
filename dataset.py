@@ -18,15 +18,14 @@ class CarvanaDataset(Dataset):
     def __getitem__(self, index):
         img_path = os.path.join(self.image_dir, self.images[index])
         mask_path = os.path.join(self.mask_dir, self.masks[index])
-        image = np.array(Image.open(img_path).convert("L"))
+        image = np.array(Image.open(img_path).convert("RGB"))
         mask = np.zeros((256,256))
         mask_list = []
-        for i in range(7):
+        for i in range(6):
             mask_path = os.path.join(self.mask_dir, self.masks[index*7+i])
             mask_list.append(np.array(Image.open(mask_path).convert("L"), dtype=np.float32))
             mask_list[i] = mask_list[i]/255
-            if i != 6:
-                mask += mask_list[i]*(i+1)
+            mask += mask_list[i]*(i+1)
         
 
         if self.transform is not None:
